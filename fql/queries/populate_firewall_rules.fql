@@ -1,0 +1,8 @@
+// Copyright Fauna, Inc.
+// SPDX-License-Identifier: MIT-0
+
+Do(
+    Create(Collection("firewall_rules"), { data: { action: "Allow", port: 80, ipRange: "0.0.0.0/0", description: "Universal HTTP access" } }),
+    Create(Collection("firewall_rules"), { data: { action: "Allow", port: 443, ipRange: "0.0.0.0/0", description: "Universal HTTPS access" } }),
+    Create(Collection("firewall_rules"), { data: { action: "Allow", port: 22, ipRange: "192.0.2.0/24", description: "Allow SSH from company headquarters" } })
+)

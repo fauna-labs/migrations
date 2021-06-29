@@ -1,0 +1,29 @@
+// Copyright Fauna, Inc.
+// SPDX-License-Identifier: MIT-0
+
+CreateFunction({
+    name: "validate_migration",
+    body: Query(
+        Lambda(
+            ["ref"],
+            Let(
+                { 
+                    new_doc: Get(Var("ref")),
+                    new_ts: Select(["ts"], Var("new_doc")),
+                    old_ts: Subtract(Var("new_ts"), 1),
+                    old_doc: At(Var("old_ts"), Get(Var("ref"))),
+                    new_ipRange: Select(["data", "ipRange"], Var("new_doc")),
+                    old_ipRange: Select(["data", "ipRange"], Var("old_doc"))
+                },
+                And(
+                    IsArray(Var("new_ipRange")),
+                    IsString(Var("old_ipRange")),
+                    Equals(
+                        Var("new_ipRange"),
+                        [Var("old_ipRange")]
+                    )
+                )
+            )
+        )
+    )
+})

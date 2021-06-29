@@ -1,0 +1,23 @@
+// Copyright Fauna, Inc.
+// SPDX-License-Identifier: MIT-0
+
+CreateFunction({
+    name: "update_firewall_rule",
+    body: Query(
+        Lambda(
+            ["id"],
+            Delete(
+                Ref(Collection("firewall_rules"), Var("id"))
+            )
+        )
+    )
+})
+
+// Test your UDF by pasting the following FQL in the web shell, replacing
+// *<some_id>* with a valid id from a document in the *firewall_rules*
+// collection.
+//
+// Your function should return the updated document, with the *action* field
+// modified to "*Allow*", the *description* field removed, and the *port* and
+// *ipRange* fields unchanged.
+Call("update_firewall_rule", ["<some_id>", { data: { action: "Allow", description: null } }])

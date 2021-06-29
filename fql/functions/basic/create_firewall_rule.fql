@@ -1,0 +1,28 @@
+// Copyright Fauna, Inc.
+// SPDX-License-Identifier: MIT-0
+
+CreateFunction({
+    name: "create_firewall_rule",
+    body: Query(
+        Lambda(
+            "new_rule",
+            Create(
+                Collection("firewall_rules"),
+                Var("new_rule")
+            )
+        )
+    )
+})
+
+// Test your UDF by pasting the following FQL in the web shell.
+Call(
+    "create_firewall_rule", 
+    {
+        data: {
+            action: "Deny",
+            port: 25,
+            ipRange: "0.0.0.0/0",
+            description: "Deny SMTP"
+        }
+    }
+)
