@@ -8,7 +8,7 @@ Update(
             Lambda(
                 ["new_rule"],
                 Let(
-                    { doc: Create(Collection("firewall_rules"), Var("new_rule")) },
+                    { doc: Create(Collection("FirewallRule"), Var("new_rule")) },
                     Call("migrate_firewall_rule", Select(["ref"], Var("doc")))
                 )
             )

@@ -7,7 +7,7 @@ CreateFunction({
         Lambda(
             ["id"],
             Delete(
-                Ref(Collection("firewall_rules"), Var("id"))
+                Ref(Collection("FirewallRule"), Var("id"))
             )
         )
     )

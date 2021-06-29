@@ -9,7 +9,7 @@ Update(
                 ["id"],
                 Let(
                     {
-                        ref: Ref(Collection("migrate_firewall_rule"), Var("id")),
+                        ref: Ref(Collection("FirewallRule"), Var("id")),
                         doc: Call("migrate_firewall_rule", Var("ref"))
                     },
                     Delete(Var("ref"))

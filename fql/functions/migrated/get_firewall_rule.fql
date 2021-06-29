@@ -9,7 +9,7 @@ Update(
                 ["id"],
                 Call(
                     "migrate_firewall_rule", 
-                    Ref(Collection("firewall_rules"), Var("id"))
+                    Ref(Collection("FirewallRule"), Var("id"))
                 )
             )
         )

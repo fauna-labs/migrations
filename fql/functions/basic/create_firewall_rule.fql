@@ -7,7 +7,7 @@ CreateFunction({
         Lambda(
             "new_rule",
             Create(
-                Collection("firewall_rules"),
+                Collection("FirewallRule"),
                 Var("new_rule")
             )
         )
