@@ -2,17 +2,14 @@
 // SPDX-License-Identifier: MIT-0
 
 Update(
-    Function("delete_firewall_rule"),
+    Function("find_firewall_rule_by_id"),
     {
         body: Query(
             Lambda(
                 ["id"],
-                Let(
-                    {
-                        ref: Ref(Collection("FirewallRule"), Var("id")),
-                        doc: Call("migrate_firewall_rule", Var("ref"))
-                    },
-                    Delete(Var("ref"))
+                Call(
+                    "migrate_firewall_rule", 
+                    Ref(Collection("FirewallRule"), Var("id"))
                 )
             )
         )
@@ -23,5 +20,5 @@ Update(
 // with a valid id from a document in the *FirewallRule* collection where
 // *ipRange* is a string, and *<array_id>* with a valid id from a document in
 // the *FirewallRule* collection where *ipRange* is an array of strings.
-Call("delete_firewall_rule", "<string_id>")
-Call("delete_firewall_rule", "<array_id>")
+Call("find_firewall_rule_by_id", "<string_id>")
+Call("find_firewall_rule_by_id", "<array_id>")

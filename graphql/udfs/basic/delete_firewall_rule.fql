@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: MIT-0
 
 CreateFunction({
-    name: "get_firewall_rule",
+    name: "delete_firewall_rule",
     body: Query(
         Lambda(
-            ["id"],
-            Get(
+            "id",
+            Delete(
                 Ref(Collection("FirewallRule"), Var("id"))
             )
         )
@@ -16,4 +16,4 @@ CreateFunction({
 // Test your UDF by pasting the following FQL in the web shell, replacing
 // *<some_id>* with a valid id from a document in the *FirewallRule*
 // collection.
-Call("get_firewall_rule", "<some_id>")
+Call("delete_firewall_rule", "<some_id>")

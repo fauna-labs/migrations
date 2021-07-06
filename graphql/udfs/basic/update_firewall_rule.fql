@@ -5,10 +5,10 @@ CreateFunction({
     name: "update_firewall_rule",
     body: Query(
         Lambda(
-            ["id", "new_rule"],
+            ["id", "firewall_rule_input"],
             Update(
                 Ref(Collection("FirewallRule"), Var("id")),
-                Var("new_rule")
+                { data: Var("firewall_rule_input") }
             )
         )
     )

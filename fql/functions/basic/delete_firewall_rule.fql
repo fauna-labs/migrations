@@ -14,6 +14,6 @@ CreateFunction({
 })
 
 // Test your UDF by pasting the following FQL in the web shell, replacing
-// *<some_id>* with a valid id from a document in the *firewall_rules*
+// *<some_id>* with a valid id from a document in the *FirewallRule*
 // collection.
 Call("delete_firewall_rule", "<some_id>")
