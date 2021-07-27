@@ -38,21 +38,17 @@ exports.lambdaHandler = async (event) => {
     }
 
     let result = await client.query(
-        q.Map(
-            rules,
-            q.Lambda(
-                'rule',
-                q.Create(
-                    q.Collection('FirewallRule'),
-                    { data: q.Var('rule') }
-                )
-            )
+        q.Call(
+            "bulk_creator",
+            rules
         )
     );
 
     const response = {
         statusCode: 200,
-        body: JSON.stringify({count: numRules})
+        body: {
+            count: numRules
+    }
     };
 
     return response;

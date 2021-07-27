@@ -1,0 +1,16 @@
+// Copyright Fauna, Inc.
+// SPDX-License-Identifier: MIT-0
+
+CreateFunction({
+    name: "bulk_creator",
+    body: Query(Lambda(
+        "inputs",
+        Map(
+            Var("inputs"),
+            Lambda(
+                "rule",
+                Call("create_firewall_rule", { data: Var("rule") })
+            )
+        )
+    ))
+})

@@ -42,9 +42,12 @@ Resources:
       DefinitionUri: statemachine/data_populator.asl.yaml
       DefinitionSubstitutions:
         PopulateDataFunctionArn: !GetAtt PopulateDataFunction.Arn
+        NotificationTopic: !Ref NotificationTopic
       Policies:
         - LambdaInvokePolicy:
             FunctionName: !Ref PopulateDataFunction
+        - SNSPublishMessagePolicy:
+            TopicName: !GetAtt NotificationTopic.TopicName
 
   MigrateBatchFunction:
     Type: AWS::Serverless::Function
@@ -73,3 +76,21 @@ Resources:
 
   MonitoringQueue:
     Type: AWS::SQS::Queue
+
+  SnsToSqsPolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: "Allow SNS publish to SQS"
+            Effect: Allow
+            Principal: 
+              Service: "sns.amazonaws.com"
+            Resource: !GetAtt MonitoringQueue.Arn
+            Action: SQS:SendMessage
+            Condition:
+              ArnEquals:
+                aws:SourceArn: !Ref NotificationTopic
+      Queues:
+        - Ref: MonitoringQueue

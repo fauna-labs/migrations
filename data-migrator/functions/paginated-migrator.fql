@@ -1,0 +1,20 @@
+// Copyright Fauna, Inc.
+// SPDX-License-Identifier: MIT-0
+
+CreateFunction({
+    name: "paginated_migrator",
+    body: Query(Lambda(
+        ["function", "page_size", "after"],
+        Map(
+            If(
+                IsNull(Var("after")),
+                Paginate(Documents(Collection("FirewallRule")), { size: Var("page_size") }),
+                Paginate(Documents(Collection("FirewallRule")), { size: Var("page_size") , after: Var("after") }),
+            ),
+            Lambda(
+                "rule",
+                Call("migrate_firewall_rule", Var("rule"))
+            )
+        )
+    ))
+})

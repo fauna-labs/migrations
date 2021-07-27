@@ -25,26 +25,16 @@ exports.lambdaHandler = async (event) => {
     await initComplete;
 
     const batchSize = event.batch_size || process.env.FAUNA_BATCH_SIZE || 100;
-    let options = { size: batchSize }
+    let after = null;
 
     if (event.after != null) {
-        let after = q.Ref(q.Collection("FirewallRule"), event.after[0]['@ref'].id)
-        options.after = after;
+        after = q.Ref(q.Collection("FirewallRule"), event.after[0]['@ref'].id)
     }
 
     let result = await client.query(
-        q.Map(
-            q.Paginate(
-                q.Documents(q.Collection("FirewallRule")),
-                options
-            ),
-            q.Lambda(
-                "rule",
-                q.Call(
-                    "migrate_firewall_rule",
-                    q.Var("rule")
-                )
-            )
+        q.Call(
+            "paginated_migrator",
+            ["migrate_firewall_rule", batchSize, after]
         )
     );
 

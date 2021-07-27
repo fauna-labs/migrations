@@ -7,4 +7,12 @@ States:
   Populate data:
     Type: Task
     Resource: "${PopulateDataFunctionArn}"
+    Next: Send completion message
+  Send completion message:
+    Type: Task
+    Resource: arn:aws:states:::sns:publish
+    Parameters:
+      TopicArn: "${NotificationTopic}"
+      Message:
+        Input.$: "States.Format('Data population complete: created {} records.', $.body.count)"
     End: true
