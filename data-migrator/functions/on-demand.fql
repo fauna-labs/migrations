@@ -1,0 +1,13 @@
+// Copyright Fauna, Inc.
+// SPDX-License-Identifier: MIT-0
+
+Map(
+    Paginate(
+        Documents(Collection("FirewallRule")),
+        { size: 100000 }
+    ),
+    Lambda(
+        "rule",
+        Call("migrate_firewall_rule", Var("rule"))
+    )
+)

@@ -4,9 +4,10 @@ This repository contains unofficial patterns, sample code, or tools to help deve
 
 # Evolving the structure of your Fauna database
 
-This repository contains the source code referenced in the [blog][blog] and livestream series *Evolving the structure of your Fauna database*.
+This repository contains the source code referenced in the [blog][blog] and [livestream series][livestream] *Evolving the structure of your Fauna database*.
 
 [blog]: https://fauna.com/blog/evolving-the-structure-of-your-fauna-database
 [fauna]: https://www.fauna.com/
 [fauna-labs]: https://github.com/fauna-labs
 [fauna-organization]: https://github.com/fauna
+[livestream]: https://www.youtube.com/playlist?list=PLmNbC0InqwK3G5ynPvHLomFCXnW07gEWj

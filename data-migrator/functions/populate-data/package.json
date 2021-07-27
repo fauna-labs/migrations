@@ -1,0 +1,12 @@
+{
+  "name": "populate_data",
+  "version": "0.1.0",
+  "description": "Populates sample data for demonstrating data migrations with Fauna, the data API for modern applications.",
+  "main": "app.js",
+  "author": "Fauna Inc.",
+  "license": "MIT-0",
+  "dependencies": {
+    "faker": "^5.5.3",
+    "faunadb": "^4.3.0"
+  }
+}

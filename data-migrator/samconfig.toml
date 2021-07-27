@@ -1,0 +1,10 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "data-migrator"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-cro3tcku1ohl"
+s3_prefix = "data-migrator"
+region = "us-east-2"
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "FaunaSecretParameter=\"fauna-secret\""

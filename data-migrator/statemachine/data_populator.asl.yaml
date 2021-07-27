@@ -1,0 +1,10 @@
+# Copyright Fauna, Inc.
+# SPDX-License-Identifier: MIT-0
+---
+Comment: A state machine that populates sample data for demonstrating data migrations with Fauna, the data API for modern applications.
+StartAt: Populate data
+States:
+  Populate data:
+    Type: Task
+    Resource: "${PopulateDataFunctionArn}"
+    End: true

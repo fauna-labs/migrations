@@ -1,0 +1,40 @@
+# Copyright Fauna, Inc.
+# SPDX-License-Identifier: MIT-0
+---
+Comment: A state machine that demonstrates throttled data migrations with Fauna, the data API for modern applications.
+StartAt: Migrate batch
+States:
+  Migrate batch:
+    Type: Task
+    Resource: "${MigrateBatchFunctionArn}"
+    InputPath: "$.batch_data"
+    ResultPath: "$.batch_data"
+    Next: Records remain?
+  Records remain?:
+    Type: Choice
+    Choices:
+    - Variable: "$.batch_data.after"
+      IsPresent: true
+      Next: Send progress report
+    Default: Send completion message
+  Send progress report:
+    Type: Task
+    Resource: arn:aws:states:::sns:publish
+    ResultPath: "$.last_message"
+    Parameters:
+      TopicArn: "${NotificationTopic}"
+      Message:
+        Input.$: "States.Format('Migration update: migrated {} records, continuing after {}.', $.batch_data.batch_size, $.batch_data.after)"
+    Next: Throttle down
+  Throttle down:
+    Type: Wait
+    SecondsPath: "$.throttle_time"
+    Next: Migrate batch
+  Send completion message:
+    Type: Task
+    Resource: arn:aws:states:::sns:publish
+    Parameters:
+      TopicArn: "${NotificationTopic}"
+      Message:
+        Input: Migration complete!
+    End: true

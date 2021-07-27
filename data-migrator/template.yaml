@@ -1,0 +1,75 @@
+# Copyright Fauna, Inc.
+# SPDX-License-Identifier: MIT-0
+
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  data-migrator
+
+  SAM Template for performing data migrations with Fauna, the data API for modern applications.
+
+Parameters:
+  FaunaSecretParameter:
+    Type: String
+    Default: fauna-secret
+
+Globals:
+  Function:
+    Runtime: nodejs14.x
+    MemorySize: 512
+    Timeout: 30
+    Environment:
+      Variables:
+        FAUNA_SECRET_PARAMETER: !Ref FaunaSecretParameter
+
+Resources:
+  DataMigratorStateMachine:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      DefinitionUri: statemachine/data_migrator.asl.yaml
+      DefinitionSubstitutions:
+        MigrateBatchFunctionArn: !GetAtt MigrateBatchFunction.Arn
+        NotificationTopic: !Ref NotificationTopic
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: !Ref MigrateBatchFunction
+        - SNSPublishMessagePolicy:
+            TopicName: !GetAtt NotificationTopic.TopicName
+
+  DataPopulatorStateMachine:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      DefinitionUri: statemachine/data_populator.asl.yaml
+      DefinitionSubstitutions:
+        PopulateDataFunctionArn: !GetAtt PopulateDataFunction.Arn
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: !Ref PopulateDataFunction
+
+  MigrateBatchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/migrate-batch/
+      Handler: app.lambdaHandler
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: !Ref FaunaSecretParameter
+
+  PopulateDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/populate-data/
+      Handler: app.lambdaHandler
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: !Ref FaunaSecretParameter
+
+  NotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Protocol: sqs
+          Endpoint: !GetAtt MonitoringQueue.Arn
+
+  MonitoringQueue:
+    Type: AWS::SQS::Queue
